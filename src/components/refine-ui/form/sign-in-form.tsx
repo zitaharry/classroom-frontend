@@ -30,7 +30,7 @@ export const SignInForm = () => {
 
   const { title } = useRefineOptions();
 
-  const { mutate: login } = useLogin();
+  const { mutate: login, isLoading } = useLogin();
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,6 +38,7 @@ export const SignInForm = () => {
     login({
       email,
       password,
+      remember: rememberMe,
     });
   };
 
@@ -62,7 +63,7 @@ export const SignInForm = () => {
         "justify-center",
         "px-6",
         "py-8",
-        "min-h-svh"
+        "min-h-svh",
       )}
     >
       <div className={cn("flex", "items-center", "justify-center")}>
@@ -82,7 +83,7 @@ export const SignInForm = () => {
               "text-blue-600",
               "dark:text-blue-400",
               "text-3xl",
-              "font-semibold"
+              "font-semibold",
             )}
           >
             Sign in
@@ -125,7 +126,7 @@ export const SignInForm = () => {
                 "flex items-center justify-between",
                 "flex-wrap",
                 "gap-2",
-                "mt-4"
+                "mt-4",
               )}
             >
               <div className={cn("flex items-center", "space-x-2")}>
@@ -147,7 +148,7 @@ export const SignInForm = () => {
                   "gap-2",
                   "text-primary hover:underline",
                   "text-blue-600",
-                  "dark:text-blue-400"
+                  "dark:text-blue-400",
                 )}
               >
                 <span>Forgot password</span>
@@ -155,8 +156,13 @@ export const SignInForm = () => {
               </Link>
             </div>
 
-            <Button type="submit" size="lg" className={cn("w-full", "mt-6")}>
-              Sign in
+            <Button
+              type="submit"
+              size="lg"
+              className={cn("w-full", "mt-6")}
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
 
             <div className={cn("flex", "items-center", "gap-4", "mt-6")}>
@@ -173,6 +179,7 @@ export const SignInForm = () => {
                   className={cn("flex", "items-center", "gap-2")}
                   onClick={handleSignInWithGoogle}
                   type="button"
+                  disabled={isLoading}
                 >
                   <svg
                     width="21"
@@ -194,6 +201,7 @@ export const SignInForm = () => {
                   className={cn("flex", "items-center", "gap-2")}
                   onClick={handleSignInWithGitHub}
                   type="button"
+                  disabled={isLoading}
                 >
                   <svg
                     width="21"
@@ -229,7 +237,7 @@ export const SignInForm = () => {
                 "text-green-600",
                 "dark:text-green-400",
                 "font-semibold",
-                "underline"
+                "underline",
               )}
             >
               Sign up

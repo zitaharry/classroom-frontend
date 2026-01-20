@@ -12,6 +12,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -25,6 +32,8 @@ import { cn } from "@/lib/utils";
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [role, setRole] = useState<string>("student");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -34,7 +43,7 @@ export const SignUpForm = () => {
 
   const { title } = useRefineOptions();
 
-  const { mutate: register } = useRegister();
+  const { mutate: register, isLoading } = useRegister();
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,6 +61,8 @@ export const SignUpForm = () => {
 
     register({
       email,
+      name,
+      role,
       password,
     });
   };
@@ -77,7 +88,7 @@ export const SignUpForm = () => {
         "justify-center",
         "px-6",
         "py-8",
-        "min-h-svh"
+        "min-h-svh",
       )}
     >
       <div className={cn("flex", "items-center", "justify-center", "gap-2")}>
@@ -97,7 +108,7 @@ export const SignUpForm = () => {
               "text-green-600",
               "dark:text-green-400",
               "text-3xl",
-              "font-semibold"
+              "font-semibold",
             )}
           >
             Sign up
@@ -105,7 +116,7 @@ export const SignUpForm = () => {
           <CardDescription
             className={cn("text-muted-foreground", "font-medium")}
           >
-            Welcome to lorem ipsum dolor.
+            Create an account to get started.
           </CardDescription>
         </CardHeader>
 
@@ -114,11 +125,37 @@ export const SignUpForm = () => {
         <CardContent className={cn("px-0")}>
           <form onSubmit={handleSignUp}>
             <div className={cn("flex", "flex-col", "gap-2")}>
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className={cn("flex", "flex-col", "gap-2", "mt-6")}>
+              <Label htmlFor="role">Role</Label>
+              <Select value={role} onValueChange={(value) => setRole(value)}>
+                <SelectTrigger id="role" className="w-full">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="student">Student</SelectItem>
+                  <SelectItem value="teacher">Teacher</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className={cn("flex", "flex-col", "gap-2", "mt-6")}>
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder=""
+                placeholder="john@example.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -157,10 +194,11 @@ export const SignUpForm = () => {
                 "mt-6",
                 "bg-green-600",
                 "hover:bg-green-700",
-                "text-white"
+                "text-white",
               )}
+              disabled={isLoading}
             >
-              Sign up
+              {isLoading ? "Signing up..." : "Sign up"}
             </Button>
 
             <div className={cn("flex", "items-center", "gap-4", "mt-6")}>
@@ -176,6 +214,7 @@ export const SignUpForm = () => {
                   className={cn("flex", "items-center", "gap-2")}
                   onClick={handleSignUpWithGoogle}
                   type="button"
+                  disabled={isLoading}
                 >
                   <svg
                     width="21"
@@ -196,6 +235,7 @@ export const SignUpForm = () => {
                   className={cn("flex", "items-center", "gap-2")}
                   onClick={handleSignUpWithGitHub}
                   type="button"
+                  disabled={isLoading}
                 >
                   <svg
                     width="21"
@@ -231,7 +271,7 @@ export const SignUpForm = () => {
                 "text-blue-600",
                 "dark:text-blue-400",
                 "font-semibold",
-                "underline"
+                "underline",
               )}
             >
               Sign in
